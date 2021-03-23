@@ -28,7 +28,7 @@ public class ParallelMatrixMultiplier {
 
     /**
      * Creates new Thread for each row in result matrix to count and fills result matrix
-     * @return result pf parallel multiplication
+     * @return result of parallel multiplication
      */
     public int[][] multiply() {
         Thread[] threads = new Thread[matrix1.length];
@@ -39,19 +39,13 @@ public class ParallelMatrixMultiplier {
             threads[i] = thread;
             thread.start();
 
-        }
-        boolean isAlive=true;
-        while (isAlive) {
-            int k = 0;
-            for (Thread t : threads) {
-                if (!t.isAlive()) {
-                    k++;
-                    if (k == threads.length){
-                        isAlive=false;
-                        break;
-                    }
-                }
 
+        }
+        for (Thread t : threads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
